@@ -1,17 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    Привет
+    https://unpkg.com/axios/dist/axios.mi..
+    <br>
+    {{i}}
+    <br>
+    {{HT}}
+    <br>
+    <button @click="loadHT">Загрузим хэштеги</button>
+
   </div>
 </template>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      i:5,
+      HT:[],
+      url: {
+        HT:'https://dka-develop.ru/api?type=hashtag',
+        Citys:'https://dka-develop.ru/api?type=city'
+      }
+    }
+  },
+  methods: {
+      loadHT() {
+        this.i++;
+        console.log(this.url.HT);
+        axios.get(this.url.HT).then( (response)=> {
+          this.HT=response.data;
+        });
+        this.i++;
+      }
   }
 }
 </script>
