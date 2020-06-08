@@ -1,76 +1,116 @@
 <template>
   <div id="app">
-    Привет
-    https://unpkg.com/axios/dist/axios.mi..
-    <br>
     {{i}}
     <br>
-    {{HT}}
+    {{webResponse}}
     <br>
-    <button @click="loadHT">Загрузим loadHT</button>
+    <button @click="loadDronRef">Загрузим loadDronRef</button>
     <br>
-    <button @click="MyFetch">Загрузим MyFetch</button>
     <br>
-    <button @click="MyXHR">Загрузим MyXHR</button>
+    <button @click="myPost">Post запрос BB Free </button>
+    <br>
+    <br>
+    <button @click="postTypicode">Post запрос на postTypicode</button>
 
-  </div>
+    <br>
+    <br>
+    <button @click="postBB">Post запрос на postBB</button>
+
+
+
+    <br>
+    <br>
+    <button @click="myGet">Get запрос на RC.BB</button>
+    <br>
+
+    <br>
+    <br>
+    <button @click="getHTTPDron">Get запрос на getHTTPDron</button>
+    <br>
+
+
+
+</div>
+
 </template>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+import {HTTP} from './components/http-common';
+import axios from 'axios';
 
 export default {
   name: 'App',
   data() {
     return {
       i:5,
-      HT:[],
+      webResponse:[],
       url: {
         HT:'https://dka-develop.ru/api?type=hashtag',
         Citys:'https://dka-develop.ru/api?type=city',
+
         DronRef:'https://api.dron.digital/apee/referrals-f88a20cc-757e-11ea-8c9a-00155d020612',
-        DronCitys:'http://cms.rc.dron.digital/api/v1/cities?country_id=1',
-        BB:'https://bookingboard.ru/plan/?order_id=6D037E09-C536-483A-9979-A0145410F688&city_id=1'
-      }
-    }
-  },
-  methods: {
-      loadHT() {
-        this.i++;
-        axios.get(this.url.DronRef).then( (response)=> {
-          this.HT=response.data;
-        });
-        this.i++;
+        BB:'https://rc.bb.direct/plan/?order_id=952FF47B-9A99-43B4-951A-B38697124EB4&city_id=1'
       },
-      myPost() {
-        {
-          axios.post(this.url.BB, {
+      postBodyFree:'',
+      postBodyBB: `{
               "action": "books_get",
               "params": {
                 "tableName": "CorpRD",
                 "searchText": "ива"
               },
-              "token": "7E7E8B19-9CD6-4DB4-B510-0DFE48DB327B",
+              "token": "68141BA7-1941-4E59-9B10-7EB08E2539F",
               "version": 1
-          }).then ((response)=> {
-            this.HT=response.data;
+              }`
+    }
+  },
+  methods: {
+      loadDronRef() {
+        this.i++;
+        axios.get(this.url.DronRef).then( (response)=> {
+          this.webResponse=response.data;
+        });
+        this.i++;
+      },
+      myGet() {
+        this.i++;
+        axios.get(this.url.BB).then( (response)=> {
+          this.webResponse=response.data;
+        });
+        this.i++;
+      },      
+      myPost() {
+          this.webResponse='';
+          axios.post(`http://rc.bb.direct/plan`, this.postBodyFree
+          ).then ((response)=> {
+            this.webResponse=response.data;
           })
-}
-      }
+      },
+      postTypicode() {
+          HTTP.get(`posts`) 
+          .then (response=> {
+            this.webResponse=response.data;
+          })
+      },
 
+      getHTTPDron() {
+          HTTP.post(``,this.postBodyBB) 
+          .then ((response)=> {
+            this.webResponse=response.data;
+          })
+      },
 
+      postBB() {
+          this.webResponse='';
+          axios.post(this.url.BB, this.postBodyBB
+          ).then ((response)=> {
+            this.webResponse=response.data;
+          })
+      }      
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
